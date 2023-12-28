@@ -1,0 +1,53 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <BitmapImage x:Key="ICON" UriSource="icon.ico"/>
+    <Style x:Key="MainMenu" TargetType="ListBox">
+        <Setter Property="Template">
+            <Setter.Value> 
+                <ControlTemplate>
+            <Border BorderThickness="1" BorderBrush="SteelBlue">
+                <ItemsPresenter HorizontalAlignment="Stretch" VerticalAlignment="Center"></ItemsPresenter>
+            </Border>
+        </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <ControlTemplate TargetType="ListBoxItem" x:Key="MainMenuItem">
+        <Border Name="LBI" TextBlock.FontSize="10" Background="{Binding Path=Background, RelativeSource={RelativeSource AncestorType=Window, Mode=FindAncestor}}">
+            <TextBlock Name="TXB" Padding="5" TextAlignment="Center" Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" FontSize="18"/>
+        </Border>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="true" >
+                <Setter Property="Foreground" Value="White"/>
+            </Trigger>
+
+            <EventTrigger RoutedEvent="ListBoxItem.MouseEnter">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="TXB" Storyboard.TargetProperty="FontSize" To="22" Duration="0:0:0.1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="ListBoxItem.MouseLeave">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetName="TXB" Storyboard.TargetProperty="FontSize" Duration="0:0:0.1" BeginTime="0:0:0.1"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+            <Trigger Property="IsMouseOver" Value="true">
+                <Setter TargetName="LBI" Property="Background" Value="SteelBlue"/>
+            </Trigger>
+            <!--<Trigger Property="IsSelected" Value="true">
+                                        <Setter TargetName="LBI" Property="Background" Value="SlateBlue"></Setter>
+                                    </Trigger>-->
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+</ResourceDictionary>

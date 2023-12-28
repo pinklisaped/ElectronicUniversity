@@ -1,0 +1,19 @@
+﻿<Window x:Class="Electronic.Registration"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Регистрация" Height="186" Width="368" WindowStyle="SingleBorderWindow" ResizeMode="NoResize" FocusManager.FocusedElement="{Binding ElementName=NAME_TEXTBOX}" WindowStartupLocation="CenterScreen" Icon="{Binding Source={StaticResource ICON}}">
+    <Grid>
+    <StackPanel Name="DEFAULT_PANEL" Margin="50 5" Background="White" Panel.ZIndex="1">
+            <Label>Имя:</Label>
+            <TextBox Name="NAME_TEXTBOX" ToolTip="В формате &quot;Иванов Иван Иванович&quot;" TabIndex="0"/>
+            <Label>Группа:</Label>
+            <TextBox Name="GROUP_TEXTBOX"/>
+            <Button Content="Регистрация" Width="150" Height="30" Margin="10" Click="Button_Click"/>
+    </StackPanel>
+    <StackPanel Margin="50 20">
+        <Label>Пароль:</Label>
+        <TextBox Name="PASSWORD_TEXTBOX" TabIndex="0"/>
+        <Button Content="Регистрация" Width="150" Height="30" Margin="10" Click="Button_Click"/>
+    </StackPanel>
+    </Grid>
+</Window>

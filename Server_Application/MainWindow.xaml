@@ -1,0 +1,171 @@
+﻿<Window x:Class="Server_Application.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:UserElements;assembly=PNetLib"
+        xmlns:obj="clr-namespace:System;assembly=mscorlib"
+        xmlns:electronic="clr-namespace:Server_Application"
+        Title="MainWindow" Height="600" Width="750">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="20"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <Menu Grid.ColumnSpan="3" Grid.Row="0" Background="White" FontSize="13" Padding="5 0" Style="{StaticResource MenuStyle}">
+            <MenuItem Header="Статистика" >
+                <MenuItem Command="Open"/>
+                <MenuItem Command="Save"/>
+                <MenuItem Command="SaveAs"/>
+                <Separator/>
+                <MenuItem Header="Выход"/>
+
+            </MenuItem>
+            <MenuItem Header="Тест">
+                <MenuItem Command="Play" Header="Старт"/>
+                <MenuItem Command="Pause"/>
+                <MenuItem Command="Stop"/>
+            </MenuItem>
+            <MenuItem Header="Группы">
+                <MenuItem Command="electronic:Local_Commands.Open"/>
+                <MenuItem Command="electronic:Local_Commands.OpenPasswords"/>
+                <MenuItem Command="electronic:Local_Commands.Clear"/>
+            </MenuItem>
+        </Menu>
+
+        <DataGrid x:Name="TABLE" Grid.Row="1" AllowDrop="True" SelectionMode="Single" ColumnWidth="auto" ItemsSource="{DynamicResource ResourceKey=Students}" VerticalGridLinesBrush="{Binding Path=HorizontalGridLinesBrush, RelativeSource={RelativeSource Self}}" HorizontalGridLinesBrush="#FFCBE4EE" AutoGenerateColumns="False" CanUserReorderColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" BorderBrush="{DynamicResource MAIN_COLOR}" CellStyle="{DynamicResource DATAGRIDCELLSTYLE}" FontSize="13">
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Имя" CanUserResize="True" Binding="{Binding Name}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+                            <Setter Property="TextAlignment" Value="Left"/>
+                            <Setter Property="Margin" Value="5 0"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Текущее задание" CanUserResize="False" Binding="{Binding Current_Task}"/>
+                <DataGridTextColumn Header="Текущий результат" CanUserResize="False" Binding="{Binding Score, StringFormat=\{0:F1\}}"/>
+                <DataGridTextColumn Header="Статус" CanUserResize="False" Binding="{Binding Status}"/>
+                <DataGridTextColumn Header="Тип" CanUserResize="False" Binding="{Binding Type}"/>
+                <DataGridTextColumn Header="Группа" CanUserResize="False" Binding="{Binding Group}"/>
+            </DataGrid.Columns>
+            <DataGrid.Triggers>
+                <EventTrigger RoutedEvent="DataGrid.MouseDoubleClick">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:0.2" To="200"  Storyboard.TargetName="RIGHTPANELGRID" Storyboard.TargetProperty="Width"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </DataGrid.Triggers>
+            <DataGrid.Resources>
+                <local:StudentsList x:Key="Students"/>
+            </DataGrid.Resources>
+        </DataGrid>
+
+        <Grid Grid.Row="1" Grid.Column="1" Width="200" Name="RIGHTPANELGRID">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"></RowDefinition>
+                <RowDefinition Height="auto" MinHeight="0"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Border BorderBrush="{StaticResource MAIN_COLOR}" BorderThickness="0 1 0 1">
+                <Grid>
+                    <Label Padding="10 3.5 0 0" Opacity="1" Foreground="{StaticResource MAIN_TEXT_COLOR}">Свойства</Label>
+                    <Button
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right"
+                    Width="34"
+                    Height="25"
+                    Style="{StaticResource VS2012WindowStyleTitleBarButton}">
+                        <Path HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                        StrokeThickness="1.5"
+                        Data="M0,0 L8,8 M0,8 L8,0"/>
+                        <Button.Triggers>
+                            <EventTrigger RoutedEvent="Button.Click">
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0:0:0.2" To="0" Storyboard.TargetName="RIGHTPANELGRID" Storyboard.TargetProperty="Width"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Button.Triggers>
+                    </Button>
+                </Grid>
+            </Border>
+            <ListBox MinHeight="0" Grid.Row="1" Name="RIGHTPANELLISTBOX" Foreground="{StaticResource MAIN_TEXT_COLOR}" BorderThickness="0" Style="{StaticResource RESULTLISTBOXSTYLE}" DataContext="{Binding ElementName=TABLE, Path=SelectedItem}" ItemsSource="{Binding Statistic.Step_Score}"/>
+            <TextBlock x:Name="END_RESULT" Foreground="{StaticResource MAIN_TEXT_COLOR}" TextWrapping="WrapWithOverflow" DataContext="{Binding ElementName=TABLE, Path=SelectedItem}" Text="{Binding Total_Score, FallbackValue='Здесь будет отображаться подробная информация о каждом задании.', Mode=OneWay, StringFormat=Общая оценка \{0:F1\}}" Padding="10 0 0 0" Grid.Row="2"/>
+            <Separator Background="{StaticResource MAIN_COLOR}" Grid.Row="3" VerticalAlignment="Top"/>
+            <StackPanel Grid.Row="4" Orientation="Vertical" Margin="0 10">
+                <Button>Рестарт</Button>
+                <Button Command="electronic:Local_Commands.Clear" CommandParameter="One">Удалить</Button>
+                <Separator Background="{StaticResource MAIN_COLOR}" Margin="10 5 75 0"/>
+                <Button>Сохранить статистику</Button>
+
+                <StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Property="Foreground" Value="{StaticResource MAIN_TEXT_COLOR}"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Name="STBUTBORDER" Padding="10 2" Background="Transparent">
+                                        <ContentPresenter />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <EventTrigger RoutedEvent="MouseEnter">
+                                            <BeginStoryboard>
+                                                <Storyboard Timeline.DesiredFrameRate="30">
+                                                    <ColorAnimation Duration="0:0:0.1" To="#FF398ED6" Storyboard.TargetName="STBUTBORDER"
+                                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"/>
+                                                    <ColorAnimation Duration="0:0:0.1" To="White"
+                                                                    Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                        <EventTrigger RoutedEvent="MouseLeave">
+                                            <BeginStoryboard>
+                                                <Storyboard Timeline.DesiredFrameRate="30">
+                                                    <ColorAnimation Duration="0:0:0.1" To="White" Storyboard.TargetName="STBUTBORDER"
+                                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"/>
+                                                    <ColorAnimation Duration="0:0:0.1" To="#FF507395"
+                                                                    Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)"/>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </EventTrigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </StackPanel.Resources>
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="2" Grid.ColumnSpan="3" Background="{StaticResource MAIN_COLOR}" BorderThickness="0 2 0 0" BorderBrush="SteelBlue">
+            <TextBlock Name="TEST_END" Padding="5 0" Foreground="AliceBlue">Завершено 1/1</TextBlock>
+        </Border>
+    </Grid>
+    <Window.CommandBindings>
+        <CommandBinding Command="Open" Executed="Open_Executed" />
+        <CommandBinding Command="Save" Executed="Save_Executed" />
+        <CommandBinding Command="SaveAs" Executed="SaveAs_Executed" />
+        <CommandBinding Command="Play" Executed="Open_Executed" />
+        <CommandBinding Command="Pause" Executed="Save_Executed" />
+        <CommandBinding Command="Stop" Executed="SaveAs_Executed" />
+        <CommandBinding Command="electronic:Local_Commands.Open" Executed="Open_Group_Executed"/>
+        <CommandBinding Command="electronic:Local_Commands.OpenPasswords" Executed="OpenPass_Group_Executed"/>
+        <CommandBinding Command="electronic:Local_Commands.Clear" Executed="Clear_Group_Executed"/>
+    </Window.CommandBindings>
+</Window>

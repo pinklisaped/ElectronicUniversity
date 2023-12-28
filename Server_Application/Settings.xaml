@@ -1,0 +1,37 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Server_Application" x:Class="Server_Application.Settings"
+        Title="Settings" Height="158" Width="300">
+    <Window.Resources>
+        <local:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <Label Content="Режим:"/>
+            <Label Visibility="{Binding SelectedIndex, Converter={StaticResource IntToVisibilityConverter}, ElementName=comboBox}" Content="Список группы:"/>
+        </StackPanel>
+        <CheckBox Margin="0,0,0,2" VerticalAlignment="Bottom" Content="Обнаружение" ToolTip="Разрешить подключения" Height="16"/>
+        <CheckBox Margin="0,0,0,2" VerticalAlignment="Bottom" Grid.Column="1" Content="Начать тест" Height="16"/>
+        <Button Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">Далее</Button>
+        
+        <StackPanel Grid.Column="1">
+            <ComboBox Margin="0 2" x:Name="comboBox" SelectedIndex="1">
+                <ComboBoxItem Content="Обычный"/>
+                <ComboBoxItem Content="Защищенный"/>
+                <ComboBoxItem Content="Групповой"/>
+            </ComboBox>
+            <Grid Margin="0 2" Visibility="{Binding SelectedIndex, Converter={StaticResource IntToVisibilityConverter}, ElementName=comboBox}">
+                <TextBox/>
+                <Button Content="\.." Width="20" HorizontalAlignment="Right" Command="Open"/>
+                <Grid.CommandBindings>
+                    <CommandBinding Command="Open" Executed="CommandBinding_Executed"/>
+                </Grid.CommandBindings>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>
